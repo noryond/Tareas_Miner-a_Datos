@@ -1,0 +1,94 @@
+install.packages("arules")
+library(arules)
+install.packages("readxl")
+
+```{r}
+install.packages("arules", type = "binary")
+install.packages("readxl")
+```
+```{r}
+library(arules)
+library(readxl)
+```
+
+```{r}
+library(readxl)
+datos <- read_excel("C:\\Users\\USUARIO\\OneDrive\\Documentos\\Docs Maestrìa\\Minería de datos\\ejercicio1\\graduados-superior-2023.xlsx")
+```
+
+```{r}
+library(arules)
+reglas <- apriori(datos, parameter = list(support = 0.2, confidence = 0.5))
+inspect(reglas[0:130])
+```
+[14]  {Grupos_Quinquenales=25 a 29}   => {Nivel_Educativo=Licenciatura} 0.2082400  0.6848816 0.3040526 1.1924055  8648
+
+[15]  {Grupos_Quinquenales=25 a 29}   => {Sector=Privado}               0.2231934  0.7340619 0.3040526 1.0283999  9269
+
+[20]  {Sexo=Hombre}                   => {Sector=Privado}               0.2688001  0.7248701 0.3708252 1.0155224 11163
+[21]  {Sexo=Hombre}  
+
+
+
+```{r}
+data.frame(1:ncol(datos),colnames(datos))
+```
+
+```{r}
+datos <- datos[,-1]
+```
+
+```{r}
+reglas2 <- apriori(datos, parameter = list(support = 0.2, confidence = 0.5))
+inspect(reglas2[0:44])
+```
+
+[15] {Edad=[26,34)}                  => {Sexo=Mujer}                   0.2307544  0.6028561 0.3827687 1.0072826  9583
+
+[43] {Nivel_Educativo=Licenciatura,                                      Sector=Privado}                => {Sexo=Mujer}                   0.2473693  0.5857900 0.4222832 0.9787678 10273
+ 
+ 
+ 
+```{r}
+datos_tecnico <- subset(datos, Nivel_Educativo == "Técnico")
+datos_tecnico <- datos_tecnico[,-3]
+```
+```{r}
+reglas_3 <- apriori(datos_tecnico, parameter = list(support=0.2, confidence = 0.5))
+inspect(reglas_3[0:25])
+```
+      
+ [13] {Edad=[4,24)}                  => {Sexo=Mujer}                  0.2220529  0.7048947 0.3150157 1.0866640  2477
+ 
+```{r}
+datos_licenciatura <- subset(datos, Nivel_Educativo == "Licenciatura")
+datos_licenciatura <- datos_licenciatura[,-3]
+```
+```{r}
+datos_licenciatura <- datos_licenciatura[,-7]
+```
+
+```{r}
+reglas_4 <- apriori(datos_licenciatura, parameter = list(support=0.2, confidence = 0.5))
+inspect(reglas_4[0:13])
+```
+```{r}
+datos_maestria <- subset(datos, Nivel_Educativo == "Maestría")
+datos_maestria<- datos_maestria[,-3]
+```
+```{r}
+datos_maestria<- datos_licenciatura[,-7]
+```
+
+```{r}
+reglas_5 <- apriori(datos_maestria, parameter = list(support=0.2, confidence = 0.5))
+inspect(reglas_5[0:53])
+```
+
+
+```{r}
+data_col <- data [,c("HEC_DIA","HEC_MES", "HEC_ANO", "HEC_DEPTO", "HEC_TIPAGRE", "DIA_EMISION", "MES_EMISION", "QUIEN_REPORTA", "VIC_SEXO","VIC_EDAD",
+                            "VIC_ALFAB", "VIC_ESCOLARIDAD", "VIC_EST_CIV", "VIC_NACIONAL", "VIC_REL_AGR", "HEC_AREA", "AGR_SEXO", "AGR_EDAD",
+                            "AGR_ALFAB", "AGR_ESCOLARIDAD", "AGR_GURPET", "INST_DENUN_HECHO")]
+```
+

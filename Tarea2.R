@@ -1,22 +1,25 @@
-library(arules)
+library(fim4r)
 library(readxl)
-datos <- read_excel("C:\\Users\\USUARIO\\OneDrive\\Documentos\\Docs Maestrìa\\Minería de datos\\ejercicio1\\graduados-superior-2023.xlsx")
-data.frame(1:ncol(datos),colnames(datos))
-datos <- datos[,-1]
-reglas <- apriori(datos, parameter = list(support = 0.2, confidence = 0.5))
-inspect(reglas[0:44])
-datos_dep <- subset(datos, Departamento != "Guatemala")
-reglas_dep <- apriori(datos_dep, parameter = list(support = 0.2, confidence = 0.5))
-inspect(reglas_dep[0:40])
+library(arules)
 
 
+data <- read_excel("C:\\Users\\USUARIO\\OneDrive\\Documentos\\Docs Maestrìa\\Minería de datos\\Ejercicio2\\base-de-datos-violencia-intrafamiliar-ano-2024_v3.xlsx")
+diccionario <- read_excel("C:\\Users\\USUARIO\\OneDrive\\Documentos\\Docs Maestrìa\\Minería de datos\\Ejercicio2\\diccionario-de-variables-violencia-intrafamiliar-2023.xlsx")
+data_col <- data [,c("HEC_DIA","HEC_MES", "HEC_DEPTO", "HEC_TIPAGRE", "DIA_EMISION", "MES_EMISION", "VIC_EDAD",
+                     "VIC_ESCOLARIDAD", "VIC_EST_CIV", "VIC_REL_AGR", "HEC_AREA", "AGR_EDAD",
+                     "AGR_ESCOLARIDAD", "AGR_GURPET", "INST_DENUN_HECHO")]
 
-data.frame(1:ncol(datos_dep),colnames(datos_dep))
-datos_dep <- datos_dep[,-8]
-reglas2_dep <- apriori(datos_dep, parameter = list(support = 0.2, confidence = 0.5))
-inspect(reglas2_dep[0:26])
+str(data_col)
+na_counts <- sapply(data_col, function(x) sum(is.na(x)))
+na_counts
 
-datos_sgen <- datos_dep[,-4]
-reglas_sgen <- apriori(datos_sgen, parameter = list(support = 0.3, confidence = 0.5))
-inspect(reglas_sgen[0:4])
-data.frame(1:ncol(datos_sgen),colnames(datos_sgen))
+
+result <- fim4r(data_col, method = "fpgrowth", target = "rules", supp = .3, conf = .5)
+rf <- as(result, "data.frame")
+
+data2 <- subset(data_col, HEC_AREA == 2)
+data_col2 <- data [,c("HEC_DIA","HEC_MES", "HEC_DEPTO", "HEC_TIPAGRE", "DIA_EMISION", "MES_EMISION", "VIC_EDAD",
+                     "VIC_ESCOLARIDAD", "VIC_EST_CIV", "VIC_REL_AGR", "AGR_EDAD",
+                     "AGR_ESCOLARIDAD", "AGR_GURPET", "INST_DENUN_HECHO")]
+result2 <- fim4r(data_col2, method = "fpgrowth", target = "rules", supp = .3, conf = .5)
+rf2 <- as(result2, "data.frame")

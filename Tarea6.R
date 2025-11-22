@@ -34,5 +34,45 @@ bosque <- randomForest(ORGANISMO_REMITE ~
                        ntree = 200,
                        mtry = 5
                        )
+prueba <- predict(bosque,test)
+prueba
 
-arbol <- rpart(ORGANISMO_REMITE ~ ., data = data_medidas_seguridad, method = "class" )
+matriz <- table(test$ORGANISMO_REMITE, prueba)
+matriz
+
+prec <- sum(diag(matriz))/sum(matriz)
+prec
+
+persona <- data.frame(
+  HEC_DEPTO = c(17),
+  VIC_SEXO = c(2),
+  VIC_EDAD = c(25),
+  AGR_SEXO = c(2),
+  HEC_TIPAGRE = c(2111)
+)
+
+resultado <- predict(bosque, persona, type = "prob")
+resultado
+
+persona2 <- data.frame(
+  HEC_DEPTO = c(17),
+  VIC_SEXO = c(2),
+  VIC_EDAD = c(25),
+  AGR_SEXO = c(1),
+  HEC_TIPAGRE = c(2111)
+)
+
+resultado2 <- predict(bosque, persona2, type = "prob" )
+resultado2
+
+persona3 <- data.frame(
+  HEC_DEPTO = c(17),
+  VIC_SEXO = c(1),
+  VIC_EDAD = c(25),
+  AGR_SEXO = c(2),
+  HEC_TIPAGRE = c(2111)
+)
+resultado3 <- predict(bosque, persona3, type = "prob")
+resultado3
+
+plot(bosque)
